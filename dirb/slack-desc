@@ -1,0 +1,11 @@
+
+dirb: dirb (Web Content Scanner)
+dirb:
+dirb: DIRB main purpose is to help in professional web application auditing. 
+dirb: Especially in security related testing. It covers some holes not covered by 
+dirb: classic web vulnerability scanners. DIRB looks for specific web objects that 
+dirb: other generic CGI scanners can't look for. It doesn't search vulnerabilities 
+dirb: nor does it look for web content that could be vulnerable.
+dirb:
+dirb: http://dirb.sourceforge.net/ 
+dirb:
