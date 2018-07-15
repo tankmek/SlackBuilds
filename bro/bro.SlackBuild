@@ -23,7 +23,7 @@
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 PRGNAM=bro
-VERSION=${VERSION:-2.5.3}
+VERSION=${VERSION:-2.5.4}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -70,46 +70,32 @@ find -L . \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 CFLAGS="$SLKCFLAGS" \
-  ./configure \
-  --prefix=/opt/bro \
+CXXFLAGS="$SLKCFLAGS" \
+./configure \
+  --prefix=/opt/$PRGNAM
 
-make -j$( nproc )
+make
 make install DESTDIR=$PKG
 
-# strip binaries
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-MAN1="bro-cut.1.gz trace-summary.1.gz"
-MAN8="bro.8.gz broctl.8.gz"
-# compress man pages
-mkdir -p $PKG/usr/share/man/man{1,8}
-find $PKG/opt/bro/share/man -type f -exec gzip -9 {} \;
-
-cd $PKG/opt/bro/share/man/man1
-cp -a $MAN1 $PKG/usr/share/man/man1  
-
-cd $PKG/opt/bro/share/man/man8
-cp -a $MAN8 $PKG/usr/share/man/man8  
-
-rm -rf $PKG/opt/bro/share/man
-
-# put docs where expected
-mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cd $TMP/$PRGNAM-$VERSION
-cp -a CHANGES README COPYING NEWS VERSION $PKG/usr/doc/$PRGNAM-$VERSION
-cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
- 
 BIN="bro broccoli-config bro-config broctl bro-cut capstats trace-summary"
 mkdir -p $PKG/usr/bin
-
-cd $PKG/usr/bin 
 for i in $BIN
-  do ln -sf /opt/$PRGNAM/bin/$i $i 
+  do ln -sf /opt/$PRGNAM/bin/$i $PKG/usr/bin/$i
 done
+
+mv $PKG/opt/$PRGNAM/share/man $PKG/usr
+find $PKG/usr/man -type f -exec gzip -9 {} \;
+for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a CHANGES README COPYING NEWS VERSION $PKG/usr/doc/$PRGNAM-$VERSION
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
