@@ -1,11 +1,11 @@
 
 lastpass-cli: LastPass
 lastpass-cli:
-lastpass-cli: LastPass is
-lastpass-cli: 
-lastpass-cli: 
-lastpass-cli: 
-lastpass-cli:
+lastpass-cli: LastPass is a password manager and password generator that
+lastpass-cli: locks your passwords and personal information in a secure vault.
+lastpass-cli: The standard version of LastPass comes with a web interface, but
+lastpass-cli: also includes plugins for various web browsers and apps for many
+lastpass-cli: smartphones.
 lastpass-cli:
 lastpass-cli: https://www.lastpass.com/
 lastpass-cli:
