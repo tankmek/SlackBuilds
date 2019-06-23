@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# Slackware build script for dirb
+# Slackware build script for usbguard
 
-# Copyright 2018 Michael Edie, USA
+# Copyright 2019 Michael Edie Orlando, FL USA
 # All rights reserved.
 #
 # Redistribution and use of this script, with or without modification, is
@@ -22,8 +22,8 @@
 #  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 #  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-PRGNAM=dirb
-VERSION=${VERSION:-222}
+PRGNAM=usbguard
+VERSION=${VERSION:-0.7.4}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 
@@ -59,9 +59,8 @@ set -e
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM$VERSION $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM$VERSION.tar.gz
-mv $PRGNAM$VERSION $PRGNAM-$VERSION
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
 cd $PRGNAM-$VERSION
 chown -R root:root .
 find -L . \
@@ -70,34 +69,40 @@ find -L . \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
-# Fix broken permissions
-chmod 755 configure
-
 CFLAGS="$SLKCFLAGS" \
-  ./configure \
+CXXFLAGS="$SLKCFLAGS" \
+./configure \
   --prefix=/usr \
-  --localstatedir=/var \
-  --sysconfdir=/etc \
-  --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
   --libdir=/usr/lib${LIBDIRSUFFIX} \
+  --sysconfdir=/etc \
+  --localstatedir=/var \
+  --mandir=/usr/man \
+  --build=$ARCH-slackware-linux \
+  --with-crypto-library=sodium \
+  --with-bundled-catch \
+  --with-bundled-pegtl
 
-# install and strip binaries
-make -j$( nproc )
-make install-strip DESTDIR=$PKG
+make
+make install DESTDIR=$PKG
 
-# compress man pages
+find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
+  | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
+DOCS="VERSION LICENSE CHANGELOG.md README.adoc"
+
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
 
-# put docs where expected
+install -D -m 0644 $CWD/config/usbguard.logrotate $PKG/etc/logrotate.d/usbguard.new
+install -D -m 0644 $CWD/config/rc.usbguard $PKG/etc/rc.d/rc.usbguard.new
+
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-cd $TMP/$PRGNAM-$VERSION
-cp -a README.txt LICENSE.txt $PKG/usr/doc/$PRGNAM-$VERSION
+cp -a $DOCS $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
- 
+
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
+cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
 cd $PKG
-/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-txz}
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
