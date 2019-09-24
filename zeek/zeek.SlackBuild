@@ -74,13 +74,13 @@ CXXFLAGS="$SLKCFLAGS" \
 ./configure \
   --prefix=/opt/$PRGNAM
 
-make
+make -j 6
 make install DESTDIR=$PKG
 
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" | grep ELF \
   | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
-BIN="bro broccoli-config bro-config broctl bro-cut capstats trace-summary"
+BIN="zeek zeek-config zeekctl zeek-cut capstats trace-summary"
 mkdir -p $PKG/usr/bin
 for i in $BIN
   do ln -sf /opt/$PRGNAM/bin/$i $PKG/usr/bin/$i
