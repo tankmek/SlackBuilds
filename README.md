@@ -14,7 +14,7 @@ as well as the ability to reduce repetitive tasks.
 | Folder | Description |
 | --- | --- |
 | dirb | Web content scanner for auditing |
-| dnsmasq | lightweight, easy to configure, DNS forwarder and DHCP server. |
+| dnsmasq | Personal patched SB. Not on SB.org |
 | fpc-source | Open source compiler for Pascal and Object Pascal |
 | lastpass-cli | LastPass command line interface tool |
 | usbguard | rogue USB device protection |
