@@ -25,7 +25,7 @@
 cd $(dirname $0) ; CWD=$(pwd)
 
 PRGNAM=zeek
-VERSION=${VERSION:-5.0.7}
+VERSION=${VERSION:-5.0.8}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}
 PKGTYPE=${PKGTYPE:-tgz}
@@ -100,6 +100,9 @@ done
 mv $PKG/opt/$PRGNAM/share/man $PKG/usr
 find $PKG/usr/man -type f -exec gzip -9 {} \;
 for i in $( find $PKG/usr/man -type l ) ; do ln -s $( readlink $i ).gz $i.gz ; rm $i ; done
+
+# Remove symlink to build directory
+rm $PKG/opt/zeek/include/zeek/builtin-plugins/spicy-plugin/lib64/zeek-spicy
 
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a CHANGES README COPYING NEWS VERSION $PKG/usr/doc/$PRGNAM-$VERSION
