@@ -1,7 +1,7 @@
 name: Build Zeek (Updated Flow)
 
 on:
-  workflow_run:
+  workflow_dispatch:
 
 jobs:
   build:
