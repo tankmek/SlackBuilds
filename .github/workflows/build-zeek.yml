@@ -17,5 +17,6 @@ jobs:
       - name: Update Slackware package database
         run: |
           echo "[-] Updating slackpkg mirrors and package list"
-          slackpkg update
+          echo y | slackpkg gpg update
+          echo y | slackpkg update
           echo y | slackpkg upgrade-all
