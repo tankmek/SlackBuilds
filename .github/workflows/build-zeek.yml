@@ -14,9 +14,35 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+        
       - name: Update Slackware package database
         run: |
           echo "[-] Updating slackpkg mirrors and package list"
           echo y | slackpkg gpg update
           echo y | slackpkg update
           echo y | slackpkg upgrade-all
+      - name: Install Zeek Build Dependencies
+        run: |
+          echo y | slackpkg install gcc gcc-g++ make cmake ninja flex bison swig \
+            python3 python3-pip openssl zlib bzip2 libpcap libcurl libssh jemalloc guile \
+            libarchive gc libxml2 binutils gettext icu4c m4 bind libuv lmdb \
+            glibc-i18n glibc-profile glibc-zoneinfo dbus dbus-glib dbus-python libnl3
+
+      - name: Copy SlackBuild to /tmp/SBo
+        run: |
+          mkdir -p /tmp/SBo
+          cp -r ./zeek /tmp/SBo/zeek
+
+      - name: Download Zeek Source Tarball
+        run: |
+          cd /tmp/SBo/zeek
+          grep '^DOWNLOAD=' zeek.info | cut -d'"' -f2 | xargs -n1 wget -c
+
+      - name: Make SlackBuild Executable
+        run: chmod +x /tmp/SBo/zeek/zeek.SlackBuild
+
+      - name: Run SlackBuild
+        run: |
+          cd /tmp/SBo/zeek
+          export VERSION=$(grep '^VERSION=' zeek.info | cut -d'"' -f2)
+          ./zeek.SlackBuild
