@@ -1,8 +1,9 @@
 name: Build Zeek (Updated Flow)
 
 on:
-  workflow_dispatch:
-
+  push:
+    paths:
+      - 'zeek/**'
 jobs:
   build:
     runs-on: ubuntu-latest
