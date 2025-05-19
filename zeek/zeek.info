@@ -1,7 +1,7 @@
 PRGNAM="zeek"
 VERSION="7.0.7"
 HOMEPAGE="https://www.zeek.org"
-DOWNLOAD="https://download.zeek.org/zeek-7.0.4.tar.gz"
+DOWNLOAD="https://download.zeek.org/zeek-7.0.7.tar.gz"
 MD5SUM="5bdd8521c1722c2e7d3dbb298e86ec29"
 DOWNLOAD_x86_64=""
 MD5SUM_x86_64=""
