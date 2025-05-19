@@ -1,0 +1,20 @@
+name: Build Zeek (Updated Flow)
+
+on:
+  workflow_run:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: tankmek/slackware:15.0
+      options: --privileged
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Update Slackware package database
+        run: |
+          echo "[-] Updating slackpkg mirrors and package list"
+          slackpkg update
+          echo y | slackpkg upgrade-all
