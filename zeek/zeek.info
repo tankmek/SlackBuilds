@@ -1,5 +1,5 @@
 PRGNAM="zeek"
-VERSION="3.0.1"
+VERSION="7.0.7"
 HOMEPAGE="https://www.zeek.org"
 DOWNLOAD="https://www.zeek.org/downloads/zeek-7.0.7.tar.gz"
 MD5SUM="8067e609e8ac988131505f1d7da9c348"
