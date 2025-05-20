@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Slackware build script for Zeek
+# Slackware build script for zeek
 
 # Copyright 2018-2025 Michael Edie, Tampa, FL USA
 # All rights reserved.
